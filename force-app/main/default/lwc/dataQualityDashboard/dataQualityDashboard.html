@@ -1,0 +1,171 @@
+<template>
+    <lightning-card title="Data Quality Detective" icon-name="standard:data_mapping">
+        <div class="slds-p-around_medium">
+            <!-- Run Scan Button -->
+            <div class="slds-m-bottom_medium">
+                <lightning-button 
+                    label="Run Data Quality Scan" 
+                    variant="brand"
+                    onclick={handleRunScan}
+                    disabled={isLoading}
+                    class="slds-m-right_small">
+                </lightning-button>
+            </div>
+
+            <!-- Loading Spinner -->
+            <template if:true={isLoading}>
+                <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+            </template>
+
+            <!-- Error Message -->
+            <template if:true={errorMessage}>
+                <div class="slds-m-bottom_medium">
+                    <div class="slds-notify slds-notify_alert slds-theme_alert-texture slds-theme_error" role="alert">
+                        <span class="slds-assistive-text">Error</span>
+                        <h2>{errorMessage}</h2>
+                    </div>
+                </div>
+            </template>
+
+            <!-- Summary Cards -->
+            <template if:false={isLoading}>
+                <div class="summary-cards slds-m-bottom_large">
+                    <div class="summary-card">
+                        <div class="summary-label">Total Issues</div>
+                        <div class="summary-value">{summary.totalCount}</div>
+                    </div>
+                    <div class="summary-card severity-high">
+                        <div class="summary-label">High Severity</div>
+                        <div class="summary-value">{summary.highCount}</div>
+                    </div>
+                    <div class="summary-card severity-medium">
+                        <div class="summary-label">Medium Severity</div>
+                        <div class="summary-value">{summary.mediumCount}</div>
+                    </div>
+                    <div class="summary-card severity-low">
+                        <div class="summary-label">Low Severity</div>
+                        <div class="summary-value">{summary.lowCount}</div>
+                    </div>
+                </div>
+
+                <!-- Filter Buttons -->
+                <div class="filter-buttons slds-m-bottom_medium">
+                    <lightning-button 
+                        label="All" 
+                        variant={allFilterVariant}
+                        onclick={handleFilterChange}
+                        data-filter="All"
+                        class="slds-m-right_x-small">
+                    </lightning-button>
+                    <lightning-button 
+                        label="Duplicates" 
+                        variant={duplicateFilterVariant}
+                        onclick={handleFilterChange}
+                        data-filter="Duplicate"
+                        class="slds-m-right_x-small">
+                    </lightning-button>
+                    <lightning-button 
+                        label="Invalid Email" 
+                        variant={emailFilterVariant}
+                        onclick={handleFilterChange}
+                        data-filter="Invalid Email"
+                        class="slds-m-right_x-small">
+                    </lightning-button>
+                    <lightning-button 
+                        label="Invalid Phone" 
+                        variant={phoneFilterVariant}
+                        onclick={handleFilterChange}
+                        data-filter="Invalid Phone"
+                        class="slds-m-right_x-small">
+                    </lightning-button>
+                    <lightning-button 
+                        label="Orphaned Records" 
+                        variant={orphanedFilterVariant}
+                        onclick={handleFilterChange}
+                        data-filter="Orphaned Record">
+                    </lightning-button>
+                </div>
+
+                <!-- Issues Table -->
+                <template if:true={hasIssues}>
+                    <table class="slds-table slds-table_cell-buffer slds-table_bordered slds-table_striped">
+                        <thead>
+                            <tr class="slds-line-height_reset">
+                                <th scope="col">
+                                    <div class="slds-truncate" title="Issue Type">Issue Type</div>
+                                </th>
+                                <th scope="col">
+                                    <div class="slds-truncate" title="Object Type">Object Type</div>
+                                </th>
+                                <th scope="col">
+                                    <div class="slds-truncate" title="Severity">Severity</div>
+                                </th>
+                                <th scope="col">
+                                    <div class="slds-truncate" title="Description">Description</div>
+                                </th>
+                                <th scope="col">
+                                    <div class="slds-truncate" title="Record Link">Record Link</div>
+                                </th>
+                                <th scope="col">
+                                    <div class="slds-truncate" title="Actions">Actions</div>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <template for:each={filteredIssues} for:item="issue">
+                                <tr key={issue.Id}>
+                                    <td data-label="Issue Type">
+                                        <div class="slds-truncate" title={issue.IssueType__c}>{issue.IssueType__c}</div>
+                                    </td>
+                                    <td data-label="Object Type">
+                                        <div class="slds-truncate" title={issue.ObjectType__c}>{issue.ObjectType__c}</div>
+                                    </td>
+                                    <td data-label="Severity">
+                                        <span class={issue.severityClass}>
+                                            {issue.IssueSeverity__c}
+                                        </span>
+                                    </td>
+                                    <td data-label="Description">
+                                        <div class="slds-truncate" title={issue.IssueDescription__c}>
+                                            {issue.IssueDescription__c}
+                                        </div>
+                                    </td>
+                                    <td data-label="Record Link">
+                                        <a href={issue.recordUrl} target="_blank" rel="noopener">
+                                            View Record
+                                        </a>
+                                    </td>
+                                    <td data-label="Actions">
+                                        <lightning-button 
+                                            label="Fix" 
+                                            variant="success"
+                                            size="small"
+                                            onclick={handleMarkAsFixed}
+                                            data-id={issue.Id}
+                                            class="slds-m-right_x-small">
+                                        </lightning-button>
+                                        <lightning-button 
+                                            label="Ignore" 
+                                            variant="neutral"
+                                            size="small"
+                                            onclick={handleMarkAsIgnored}
+                                            data-id={issue.Id}>
+                                        </lightning-button>
+                                    </td>
+                                </tr>
+                            </template>
+                        </tbody>
+                    </table>
+                </template>
+
+                <!-- No Issues Message -->
+                <template if:false={hasIssues}>
+                    <div class="slds-text-align_center slds-p-around_large">
+                        <p class="slds-text-heading_medium">No issues found</p>
+                        <p class="slds-text-body_regular slds-m-top_small">Click "Run Data Quality Scan" to check for data quality issues.</p>
+                    </div>
+                </template>
+            </template>
+        </div>
+    </lightning-card>
+</template>

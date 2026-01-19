@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>IssueType__c</fullName>
+    <externalId>false</externalId>
+    <label>Issue Type</label>
+    <required>true</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>true</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Duplicate</fullName>
+                <default>false</default>
+                <label>Duplicate</label>
+            </value>
+            <value>
+                <fullName>Invalid Email</fullName>
+                <default>false</default>
+                <label>Invalid Email</label>
+            </value>
+            <value>
+                <fullName>Invalid Phone</fullName>
+                <default>false</default>
+                <label>Invalid Phone</label>
+            </value>
+            <value>
+                <fullName>Missing Required Field</fullName>
+                <default>false</default>
+                <label>Missing Required Field</label>
+            </value>
+            <value>
+                <fullName>Orphaned Record</fullName>
+                <default>false</default>
+                <label>Orphaned Record</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

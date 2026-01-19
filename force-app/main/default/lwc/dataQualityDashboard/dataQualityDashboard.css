@@ -1,0 +1,95 @@
+.summary-cards {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-bottom: 1.5rem;
+}
+
+.summary-card {
+    flex: 1;
+    min-width: 150px;
+    padding: 1rem;
+    border-radius: 0.25rem;
+    background-color: #f3f2f2;
+    border: 1px solid #dddbda;
+    text-align: center;
+}
+
+.summary-card.severity-high {
+    background-color: #ffebee;
+    border-color: #f44336;
+}
+
+.summary-card.severity-medium {
+    background-color: #fff8e1;
+    border-color: #ffc107;
+}
+
+.summary-card.severity-low {
+    background-color: #e8f5e9;
+    border-color: #4caf50;
+}
+
+.summary-label {
+    font-size: 0.875rem;
+    color: #706e6b;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+}
+
+.summary-value {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #080707;
+}
+
+.filter-buttons {
+    margin-bottom: 1rem;
+}
+
+.severity-badge {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 0.25rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.severity-badge.severity-high {
+    background-color: #f44336;
+    color: white;
+}
+
+.severity-badge.severity-medium {
+    background-color: #ffc107;
+    color: #080707;
+}
+
+.severity-badge.severity-low {
+    background-color: #4caf50;
+    color: white;
+}
+
+table {
+    width: 100%;
+    margin-top: 1rem;
+}
+
+table th {
+    background-color: #f3f2f2;
+    font-weight: 600;
+}
+
+table td {
+    vertical-align: middle;
+}
+
+table a {
+    color: #0176d3;
+    text-decoration: none;
+}
+
+table a:hover {
+    text-decoration: underline;
+}
